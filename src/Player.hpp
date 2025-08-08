@@ -4,13 +4,15 @@
 
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
+#include "EngineBase/DrawAble.h"
 
 
 class Player
 {
 public:
   Player();
-  int health;
+  int health_;
+  std::shared_ptr<DrawAble> drawAble_;
 };
 
 

@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_library(LibSimpFighter
         SimpFighter.cpp
+        Player.cpp
 )
 
 target_link_libraries(LibSimpFighter PUBLIC EngineBase)

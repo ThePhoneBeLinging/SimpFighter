@@ -5,6 +5,8 @@
 #ifndef SIMPFIGHTER_HPP
 #define SIMPFIGHTER_HPP
 #include <memory>
+
+#include "Player.hpp"
 #include "EngineBase/EngineBase.h"
 
 
@@ -16,6 +18,7 @@ public:
 
 private:
   std::unique_ptr<EngineBase> engineBase_;
+  std::unique_ptr<Player> player_;
 };
 
 
