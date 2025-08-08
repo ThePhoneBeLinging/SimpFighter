@@ -16,7 +16,7 @@ class Character : public Entity
 {
 public:
   Character();
-  void handleAction(double deltaTime, const std::set<Action>& actions, GameState* gameState);
+  void handleAction(double deltaTime, const std::set<Action>& actions, GameState* gameState, EngineBase* engineBase);
   int health_;
   static constexpr int movementSpeed_ = 250;
 

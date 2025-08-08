@@ -5,6 +5,7 @@
 #include "Character.hpp"
 
 #include "TextureLocations.h"
+#include "EngineBase/EngineBase.h"
 #include "Model/Vector.hpp"
 
 
@@ -14,7 +15,8 @@ Character::Character() : health_(50), lastVelocityVector_(std::make_unique<Vecto
   drawAble_->setTextureLocation(&TextureLocation::player);
 }
 
-void Character::handleAction(const double deltaTime, const std::set<Action>& actions, GameState* gameState)
+void Character::handleAction(const double deltaTime, const std::set<Action>& actions, GameState* gameState,
+                             EngineBase* engineBase)
 {
   Vector vector = Vector();
   if (actions.contains(Action::MOVE_UP))
@@ -44,8 +46,6 @@ void Character::handleAction(const double deltaTime, const std::set<Action>& act
   {
     shootingVector->x_ = lastVelocityVector_->x_;
     shootingVector->y_ = lastVelocityVector_->y_;
-    lastVelocityVector_->x_ = 0;
-    lastVelocityVector_->y_ = 0;
   }
 
   if (vector.x_ != 0)
@@ -61,5 +61,9 @@ void Character::handleAction(const double deltaTime, const std::set<Action>& act
 
   if (actions.contains(Action::SHOOT))
   {
+    auto currentPos = std::make_shared<Vector>();
+    currentPos->x_ = drawAble_->getX();
+    currentPos->y_ = drawAble_->getY();
+    gameState->projectiles_.push_back(std::make_unique<Projectile>(engineBase, shootingVector, currentPos));
   }
 }

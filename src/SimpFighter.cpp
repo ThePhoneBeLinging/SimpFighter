@@ -42,7 +42,7 @@ void SimpFighter::update(const double deltaTime)
   for (const auto& player : playerVector_)
   {
     auto actions = player->update(gameState_.get());
-    gameState_->characters_[player->getID()]->handleAction(deltaTime, actions, gameState_.get());
+    gameState_->characters_[player->getID()]->handleAction(deltaTime, actions, gameState_.get(), engineBase_.get());
   }
 }
 
