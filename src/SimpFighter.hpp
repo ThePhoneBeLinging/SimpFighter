@@ -8,6 +8,8 @@
 #include "Entities/Character.hpp"
 #include "GameState.hpp"
 #include "EngineBase/EngineBase.h"
+#include "Players/PhysicalPlayer.hpp"
+#include <vector>
 
 
 class SimpFighter
@@ -17,6 +19,7 @@ public:
   void update(double deltaTime);
 
 private:
+  std::vector<std::unique_ptr<IPlayer>> playerVector_;
   std::unique_ptr<EngineBase> engineBase_;
   std::unique_ptr<GameState> gameState_;
 };

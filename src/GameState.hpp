@@ -4,14 +4,13 @@
 
 #ifndef GAMESTATE_HPP
 #define GAMESTATE_HPP
+#include <vector>
+#include "GameState.hpp"
+#include "Entities/Projectile.hpp"
 #include "Entities/Character.hpp"
 #include "Entities/Wall.hpp"
-#include <vector>
-
-#include "GameState.hpp"
 
 class Character;
-class Wall;
 class Projectile;
 
 class GameState
@@ -19,9 +18,9 @@ class GameState
 public:
   GameState() = default;
 
-private:
-  std::vector<Character> characters_;
-  std::vector<Wall> walls_;
+  std::vector<std::shared_ptr<Character>> characters_;
+  std::vector<std::shared_ptr<Wall>> walls_;
+  std::vector<std::shared_ptr<Projectile>> projectiles_;
 };
 
 

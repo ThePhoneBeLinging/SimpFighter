@@ -13,4 +13,5 @@ add_library(LibSimpFighter
         Entities/Character.cpp
 )
 
-target_link_libraries(LibSimpFighter PUBLIC EngineBase)
+target_link_libraries(LibSimpFighter PUBLIC
+        EngineBase Utility)

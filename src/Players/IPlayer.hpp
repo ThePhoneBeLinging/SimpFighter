@@ -17,6 +17,7 @@ public:
 
   virtual ~IPlayer() = default;
   virtual std::set<Action> update(GameState* state) = 0;
+  int getID() { return id_; }
 
 protected:
   int id_;

@@ -3,3 +3,7 @@
 //
 
 #include "Entity.hpp"
+
+Entity::Entity() : drawAble_(std::make_shared<DrawAble>())
+{
+}

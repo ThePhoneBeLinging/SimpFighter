@@ -9,7 +9,7 @@
 class Entity
 {
 public:
-  Entity() = default;
+  Entity();
   virtual ~Entity() = default;
   std::shared_ptr<DrawAble> drawAble_;
 };
