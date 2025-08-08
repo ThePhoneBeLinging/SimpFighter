@@ -75,8 +75,8 @@ void Character::handleAction(const double deltaTime, const std::set<Action>& act
       return;
     }
     auto currentPos = std::make_shared<Vector>();
-    currentPos->x_ = drawAble_->getX();
-    currentPos->y_ = drawAble_->getY();
+    currentPos->x_ = drawAble_->getX() + (drawAble_->getWidth() / 2);
+    currentPos->y_ = drawAble_->getY() + (drawAble_->getHeight() / 2);
     gameState->projectiles_.push_back(std::make_unique<Projectile>(engineBase, shootingVector, currentPos));
     lastShootingTime_ = std::chrono::high_resolution_clock::now();
   }

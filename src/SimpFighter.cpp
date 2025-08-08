@@ -44,6 +44,11 @@ void SimpFighter::update(const double deltaTime)
     auto actions = player->update(gameState_.get());
     gameState_->characters_[player->getID()]->handleAction(deltaTime, actions, gameState_.get(), engineBase_.get());
   }
+
+  for (const auto& projectile : gameState_->projectiles_)
+  {
+    projectile->update(deltaTime);
+  }
 }
 
 

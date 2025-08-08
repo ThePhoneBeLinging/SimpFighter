@@ -10,8 +10,8 @@ Projectile::Projectile(EngineBase* engineBase, const std::shared_ptr<Vector>& mo
                        const std::shared_ptr<Vector>& startPos) : movementVector_(
   movementVector)
 {
-  drawAble_->setPosition(startPos->x_, startPos->y_);
-  drawAble_->setSize(200, 200);
+  drawAble_->setSize(50, 50);
+  drawAble_->setPosition(startPos->x_ - (drawAble_->getWidth() / 2), startPos->y_ - (drawAble_->getHeight() / 2));
   drawAble_->setTextureLocation(&TextureLocation::bullet);
   engineBase->registerDrawAble(drawAble_);
   movementVector_->normalizeDirection();
