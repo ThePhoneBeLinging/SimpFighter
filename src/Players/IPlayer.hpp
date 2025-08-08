@@ -6,7 +6,7 @@
 #define IPLAYER_HPP
 #include <set>
 #include "Actions.hpp"
-#include "../GameState.hpp"
+#include "Model/GameState.hpp"
 
 class IPlayer
 {

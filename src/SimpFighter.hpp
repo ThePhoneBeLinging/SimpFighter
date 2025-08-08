@@ -6,7 +6,7 @@
 #define SIMPFIGHTER_HPP
 #include <memory>
 #include "Entities/Character.hpp"
-#include "GameState.hpp"
+#include "Model/GameState.hpp"
 #include "EngineBase/EngineBase.h"
 #include "Players/PhysicalPlayer.hpp"
 #include <vector>

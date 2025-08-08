@@ -7,8 +7,8 @@
 #include <set>
 
 #include "Entity.hpp"
-#include "../GameState.hpp"
-#include "../Players/Actions.hpp"
+#include "Model/GameState.hpp"
+#include "Players/Actions.hpp"
 
 class GameState;
 
@@ -19,6 +19,9 @@ public:
   void handleAction(double deltaTime, const std::set<Action>& actions, GameState* gameState);
   int health_;
   static constexpr int movementSpeed_ = 250;
+
+private:
+  std::unique_ptr<Vector> lastVelocityVector_;
 };
 
 

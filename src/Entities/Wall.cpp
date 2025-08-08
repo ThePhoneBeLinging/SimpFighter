@@ -4,7 +4,7 @@
 
 #include "Wall.hpp"
 
-#include "../TextureLocations.h"
+#include "TextureLocations.h"
 
 Wall::Wall()
 {

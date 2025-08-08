@@ -5,12 +5,16 @@
 #ifndef PROJECTILE_HPP
 #define PROJECTILE_HPP
 #include "Entity.hpp"
+#include "Model/Vector.hpp"
 
 
 class Projectile : public Entity
 {
 public:
-  Projectile();
+  Projectile(const std::shared_ptr<Vector>& movementVector);
+  void update(double deltaTime);
+  std::shared_ptr<Vector> movementVector_;
+  static constexpr int movementSpeed_ = 500;
 };
 
 
