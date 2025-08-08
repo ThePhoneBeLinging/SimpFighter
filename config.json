@@ -1,3 +1,4 @@
 {
-  "AmountOfPlayers": 2
+  "AmountOfPlayers": 2,
+  "ShootingDelayMS": 500
 }
