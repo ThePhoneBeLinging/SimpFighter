@@ -5,8 +5,8 @@
 #ifndef SIMPFIGHTER_HPP
 #define SIMPFIGHTER_HPP
 #include <memory>
-
-#include "Player.hpp"
+#include "Entities/Character.hpp"
+#include "GameState.hpp"
 #include "EngineBase/EngineBase.h"
 
 
@@ -18,7 +18,7 @@ public:
 
 private:
   std::unique_ptr<EngineBase> engineBase_;
-  std::unique_ptr<Player> player_;
+  std::unique_ptr<GameState> gameState_;
 };
 
 

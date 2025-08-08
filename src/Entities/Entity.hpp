@@ -2,18 +2,17 @@
 // Created by eal on 08/08-2025.
 //
 
-#ifndef PLAYER_HPP
-#define PLAYER_HPP
+#ifndef ENTITY_HPP
+#define ENTITY_HPP
 #include "EngineBase/DrawAble.h"
 
-
-class Player
+class Entity
 {
 public:
-  Player();
-  int health_;
+  Entity() = default;
+  virtual ~Entity() = default;
   std::shared_ptr<DrawAble> drawAble_;
 };
 
 
-#endif //PLAYER_HPP
+#endif //ENTITY_HPP

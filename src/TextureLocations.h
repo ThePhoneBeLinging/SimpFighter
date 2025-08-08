@@ -9,6 +9,7 @@
 namespace TextureLocation
 {
   static inline std::string player = "../Resources/player.png";
+  static inline std::string wall = "../Resources/wall.png";
 }
 
 #endif //TEXTURELOCATIONS_H

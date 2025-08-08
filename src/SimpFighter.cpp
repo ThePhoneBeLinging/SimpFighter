@@ -7,16 +7,14 @@
 #include <thread>
 #include "TextureLocations.h"
 
-SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), player_(std::make_unique<Player>())
+SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>())
 {
   std::cout << "EngineBase initialized!\n";
   engineBase_->registerUpdateFunction([&](double deltaTime)
   {
     this->update(deltaTime);
   });
-  engineBase_->getGraphicsLibrary()->setTargetFPS(60);
-
-  engineBase_->registerDrawAble(player_->drawAble_);
+  engineBase_->getGraphicsLibrary()->setTargetFPS(200);
 
   engineBase_->launch();
 }
