@@ -13,8 +13,10 @@ public:
 
 
   static void addPlayer(EngineBase* engineBase, GameState* gameState);
-};
 
+private:
+  static inline int playerCount_ = 0;
+};
 
 
 #endif //LEVELCREATOR_HPP

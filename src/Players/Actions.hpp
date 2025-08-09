@@ -5,9 +5,9 @@
 #ifndef ACTIONS_HPP
 #define ACTIONS_HPP
 
-enum class Action
+enum Action
 {
-  MOVE_UP,
+  MOVE_UP = 0,
   MOVE_DOWN,
   MOVE_LEFT,
   MOVE_RIGHT,

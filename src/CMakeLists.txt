@@ -20,6 +20,8 @@ add_library(LibSimpFighter
         Entities/Character.cpp
         Entities/Projectile.cpp
         Entities/Wall.cpp
+        Players/SimpAI.cpp
+        Players/SimpAI.hpp
 )
 
 target_link_libraries(LibSimpFighter PUBLIC

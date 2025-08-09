@@ -8,6 +8,7 @@
 
 #include "Util/LevelCreator.hpp"
 #include "TextureLocations.h"
+#include "Players/SimpAI.hpp"
 #include "Util/CollisionController.hpp"
 #include "Utility/ConfigController.h"
 
@@ -21,11 +22,12 @@ SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameSt
     this->update(deltaTime);
   });
 
-  for (int i = 0; i < ConfigController::getConfigInt("AmountOfPlayers"); i++)
-  {
-    playerVector_.push_back(std::make_unique<PhysicalPlayer>(i, engineBase_->getGraphicsLibrary().get()));
-    LevelCreator::addPlayer(engineBase_.get(),gameState_.get());
-  }
+  playerVector_.push_back(std::make_unique<PhysicalPlayer>(0, engineBase_->getGraphicsLibrary().get()));
+  LevelCreator::addPlayer(engineBase_.get(), gameState_.get());
+
+  playerVector_.push_back(std::make_unique<SimpAI>(1));
+  LevelCreator::addPlayer(engineBase_.get(), gameState_.get());
+
   LevelCreator::createLevel(engineBase_.get(), gameState_.get());
 
   engineBase_->getGraphicsLibrary()->setTargetFPS(300);
