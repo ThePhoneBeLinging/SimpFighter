@@ -7,6 +7,7 @@ add_library(LibSimpFighter
         SimpFighter.cpp
 
         Util/LevelCreator.cpp
+        Util/CollisionController.cpp
 
         Players/IPlayer.hpp
         Players/Actions.hpp

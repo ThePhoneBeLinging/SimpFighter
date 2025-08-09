@@ -42,6 +42,7 @@ void Character::handleAction(const double deltaTime, const std::set<Action>& act
   vector *= movementSpeed_ * deltaTime;
 
   drawAble_->updatePosition(vector.x_, vector.y_);
+  lastMovementVector_ = vector;
 
   auto shootingVector = std::make_shared<Vector>();
 

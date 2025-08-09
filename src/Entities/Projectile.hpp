@@ -17,6 +17,7 @@ public:
   void update(double deltaTime);
   std::shared_ptr<Vector> movementVector_;
   static constexpr int movementSpeed_ = 500;
+  static constexpr int damage_ = 10;
 };
 
 

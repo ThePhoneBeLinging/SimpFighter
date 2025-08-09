@@ -8,6 +8,7 @@
 
 #include "Util/LevelCreator.hpp"
 #include "TextureLocations.h"
+#include "Util/CollisionController.hpp"
 #include "Utility/ConfigController.h"
 
 SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameState_(std::make_unique<GameState>())
@@ -43,6 +44,8 @@ void SimpFighter::update(const double deltaTime)
   {
     projectile->update(deltaTime);
   }
+
+  CollisionController::handleCollisions(gameState_.get());
 
   // Target 200 ticks
   auto timeLeft_microsec = (int)((0.01 - deltaTime) * 1000000);

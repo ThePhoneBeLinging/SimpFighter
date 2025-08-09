@@ -18,6 +18,7 @@ public:
   Character();
   void handleAction(double deltaTime, const std::set<Action>& actions, GameState* gameState, EngineBase* engineBase);
   int health_;
+  Vector lastMovementVector_;
   static constexpr int movementSpeed_ = 250;
 
 private:
