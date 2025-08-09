@@ -10,7 +10,7 @@
 class Wall : public Entity
 {
 public:
-  Wall();
+  Wall(int width, int height);
 };
 
 

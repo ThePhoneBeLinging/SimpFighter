@@ -12,6 +12,7 @@
 
 Character::Character() : health_(50), lastVelocityVector_(std::make_unique<Vector>())
 {
+  lastVelocityVector_->x_ = 1;
   drawAble_->setSize(100, 100);
   drawAble_->setTextureLocation(&TextureLocation::player);
   lastShootingTime_ = std::chrono::high_resolution_clock::now();
@@ -77,6 +78,8 @@ void Character::handleAction(const double deltaTime, const std::set<Action>& act
     auto currentPos = std::make_shared<Vector>();
     currentPos->x_ = drawAble_->getX() + (drawAble_->getWidth() / 2);
     currentPos->y_ = drawAble_->getY() + (drawAble_->getHeight() / 2);
+    currentPos->x_ += (drawAble_->getWidth() / 2) * shootingVector->x_;
+    currentPos->y_ += (drawAble_->getHeight() / 2) * shootingVector->y_;
     gameState->projectiles_.push_back(std::make_unique<Projectile>(engineBase, shootingVector, currentPos));
     lastShootingTime_ = std::chrono::high_resolution_clock::now();
   }

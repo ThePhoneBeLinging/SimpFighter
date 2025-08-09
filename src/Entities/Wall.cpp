@@ -6,8 +6,8 @@
 
 #include "TextureLocations.h"
 
-Wall::Wall()
+Wall::Wall(int width, int height)
 {
-  drawAble_->setSize(200, 200);
+  drawAble_->setSize(width, height);
   drawAble_->setTextureLocation(&TextureLocation::wall);
 }

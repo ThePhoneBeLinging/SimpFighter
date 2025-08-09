@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 23)
 add_library(LibSimpFighter
         SimpFighter.cpp
 
+        Util/LevelCreator.cpp
+
         Players/IPlayer.hpp
         Players/Actions.hpp
         Players/PhysicalPlayer.cpp
@@ -16,6 +18,7 @@ add_library(LibSimpFighter
         Entities/Entity.cpp
         Entities/Character.cpp
         Entities/Projectile.cpp
+        Entities/Wall.cpp
 )
 
 target_link_libraries(LibSimpFighter PUBLIC
