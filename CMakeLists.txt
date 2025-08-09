@@ -11,7 +11,7 @@ include(FetchContent)
 FetchContent_Declare(
         EngineBase
         GIT_REPOSITORY https://github.com/ThePhoneBeLinging/EngineBase
-        GIT_TAG v4.2.3
+        GIT_TAG v4.2.4
 )
 FetchContent_MakeAvailable(EngineBase)
 

@@ -18,7 +18,11 @@ public:
   SimpFighter();
   void update(double deltaTime);
 
+  int result = 0;
+
 private:
+  std::chrono::time_point<std::chrono::high_resolution_clock> startPoint_;
+
   std::vector<std::unique_ptr<IPlayer>> playerVector_;
   std::unique_ptr<EngineBase> engineBase_;
   std::unique_ptr<GameState> gameState_;

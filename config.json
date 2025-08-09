@@ -1,4 +1,5 @@
 {
   "AmountOfPlayers": 2,
-  "ShootingDelayMS": 500
+  "ShootingDelayMS": 500,
+  "MaxGameTime": 30
 }

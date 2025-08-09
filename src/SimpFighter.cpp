@@ -31,6 +31,7 @@ SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameSt
   LevelCreator::createLevel(engineBase_.get(), gameState_.get());
 
   engineBase_->getGraphicsLibrary()->setTargetFPS(300);
+  startPoint_ = std::chrono::high_resolution_clock::now();
   engineBase_->launch();
 }
 
@@ -48,6 +49,24 @@ void SimpFighter::update(const double deltaTime)
   }
 
   CollisionController::handleCollisions(gameState_.get());
+
+  if (gameState_->characters_[0]->health_ <= 0)
+  {
+    result = -1;
+    engineBase_->getGraphicsLibrary()->closeWindow();
+  }
+  else if (gameState_->characters_[1]->health_ <= 0)
+  {
+    result = 1;
+    engineBase_->getGraphicsLibrary()->closeWindow();
+  }
+
+  const std::chrono::high_resolution_clock::time_point timerEnd = std::chrono::high_resolution_clock::now();
+  const auto totalDuration = std::chrono::duration_cast<std::chrono::seconds>(timerEnd - startPoint_);
+  if (totalDuration.count() > ConfigController::getConfigInt("MaxGameTime"))
+  {
+    engineBase_->getGraphicsLibrary()->closeWindow();
+  }
 
   // Target 200 ticks
   auto timeLeft_microsec = (int)((0.01 - deltaTime) * 1000000);
