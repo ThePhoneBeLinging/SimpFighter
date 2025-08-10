@@ -16,6 +16,7 @@ Projectile::Projectile(EngineBase* engineBase, const std::shared_ptr<Vector>& mo
                             movementVector_->y_ * drawAble_->getHeight() / 2);
   drawAble_->setTextureLocation(&TextureLocation::bullet);
   engineBase->registerDrawAble(drawAble_);
+  addedToEngine = true;
   movementVector_->normalizeDirection();
   id = nextID_++;
 }

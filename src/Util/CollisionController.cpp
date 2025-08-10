@@ -36,27 +36,26 @@ void CollisionController::handleCollisions(GameState* gameState)
   std::vector<std::shared_ptr<Projectile>> projectiles;
   for (const auto& projectile : gameState->projectiles_)
   {
-    if (not projectile->createdByThisClient)
-    {
-      continue;
-    }
     bool projectileSurvived = true;
-    for (const auto& player : gameState->characters_)
+    if (projectile->createdByThisClient)
     {
-      if (CollisionChecker::checkSquareCollision(projectile->drawAble_, player->drawAble_))
+      for (const auto& player : gameState->characters_)
       {
-        player->health_ -= projectile->damage_;
-        projectileSurvived = false;
-        break;
+        if (CollisionChecker::checkSquareCollision(projectile->drawAble_, player->drawAble_))
+        {
+          player->health_ -= projectile->damage_;
+          projectileSurvived = false;
+          break;
+        }
       }
-    }
 
-    for (const auto& wall : gameState->walls_)
-    {
-      if (CollisionChecker::checkSquareCollision(projectile->drawAble_, wall->drawAble_))
+      for (const auto& wall : gameState->walls_)
       {
-        projectileSurvived = false;
-        break;
+        if (CollisionChecker::checkSquareCollision(projectile->drawAble_, wall->drawAble_))
+        {
+          projectileSurvived = false;
+          break;
+        }
       }
     }
 
