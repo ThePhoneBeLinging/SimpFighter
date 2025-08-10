@@ -46,6 +46,8 @@ void MultiplayerUtil::send(GameState* gameState)
   jsonObject["playerY"] = static_cast<int>(gameState->characters_[gameState->playerID_]->drawAble_->getY());
 
   std::string message = jsonObject.dump();
+  if (lastSentString == message) { return; }
+  lastSentString = message;
 
   sendto(socket_, message.c_str(), message.size(), 0,
          (struct sockaddr*)&serverAddr, sizeof(serverAddr));

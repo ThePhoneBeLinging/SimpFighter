@@ -22,6 +22,7 @@ public:
 private:
   static inline int socket_ = 0;
   static inline sockaddr_in serverAddr{};
+  static inline std::string lastSentString;
 };
 
 
