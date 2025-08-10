@@ -24,21 +24,30 @@ SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameSt
   {
     this->update(deltaTime);
   });
-
-  player_ = std::make_unique<PhysicalPlayer>(1, engineBase_->getGraphicsLibrary().get());
-
   LevelCreator::addPlayer(engineBase_.get(), gameState_.get());
   LevelCreator::addPlayer(engineBase_.get(), gameState_.get());
   LevelCreator::createLevel(engineBase_.get(), gameState_.get());
 
+  MultiplayerUtil::connect(gameState_.get());
+
+
   engineBase_->getGraphicsLibrary()->setTargetFPS(300);
-  startPoint_ = std::chrono::high_resolution_clock::now();
   MultiplayerUtil::connect(gameState_.get());
   engineBase_->launch();
 }
 
 void SimpFighter::update(const double deltaTime)
 {
+  if (not gameState_->bothConnected)
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    return;
+  }
+  else if (gameState_->firstUpdate)
+  {
+    startPoint_ = std::chrono::high_resolution_clock::now();
+    player_ = std::make_unique<PhysicalPlayer>(gameState_->playerID_, engineBase_->getGraphicsLibrary().get());
+  }
   auto actions = player_->update(gameState_.get());
   gameState_->characters_[player_->getID()]->handleAction(deltaTime, actions, gameState_.get(), engineBase_.get());
   MultiplayerUtil::send(gameState_.get());

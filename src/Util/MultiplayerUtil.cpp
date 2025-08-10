@@ -55,6 +55,14 @@ void MultiplayerUtil::send(GameState* gameState)
 
 std::set<Action> MultiplayerUtil::receive(GameState* gameState)
 {
+  auto jsonObject = nlohmann::json::object();
+  jsonObject["playerID"] = gameState->playerID_;
+  jsonObject["init"] = true;
+  auto message = jsonObject.dump();
+  sendto(socket_, message.c_str(), message.size(), 0,
+         (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+
+
   char buffer[1024];
   sockaddr_in fromAddr{};
   socklen_t fromLen = sizeof(fromAddr);
@@ -68,10 +76,27 @@ std::set<Action> MultiplayerUtil::receive(GameState* gameState)
     if (bytes > 0)
     {
       std::string bufferString = std::string(buffer);
-      if (bufferString.size() < 150)
+      auto jsonObject = nlohmann::json::parse(bufferString);
+      int playerID = jsonObject["playerID"].get<int>();
+      if (jsonObject.contains("init") && not gameState->bothConnected)
       {
-        auto jsonObject = nlohmann::json::parse(bufferString);
-        int playerID = jsonObject["playerID"].get<int>();
+        auto sendJSONObject = nlohmann::json::object();
+        gameState->playerID_ = playerID + 1;
+        sendJSONObject["playerID"] = gameState->playerID_;
+        sendJSONObject["response"] = true;
+        message = sendJSONObject.dump();
+        sendto(socket_, message.c_str(), message.size(), 0,
+               (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+        gameState->bothConnected = true;
+        continue;
+      }
+      if (jsonObject.contains("response"))
+      {
+        gameState->bothConnected = true;
+        continue;
+      }
+      if (jsonObject.contains("playerX") && jsonObject.contains("playerY"))
+      {
         int playerX = jsonObject["playerX"].get<int>();
         int playerY = jsonObject["playerY"].get<int>();
         gameState->characters_[playerID]->drawAble_->setX(playerX);
