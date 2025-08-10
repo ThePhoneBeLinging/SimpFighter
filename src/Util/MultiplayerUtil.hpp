@@ -15,9 +15,9 @@
 class MultiplayerUtil
 {
 public:
-  static void connect(Character* onlineCharacter);
-  static void send(const std::set<Action>& actions);
-  static std::set<Action> receive(Character* onlineCharacter);
+  static void connect(GameState* gameState);
+  static void send(GameState* gameState);
+  static std::set<Action> receive(GameState* gameState);
 
 private:
   static inline int socket_ = 0;

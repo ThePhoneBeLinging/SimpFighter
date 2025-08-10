@@ -12,6 +12,7 @@
 #include "Util/CollisionController.hpp"
 #include "Util/MultiplayerUtil.hpp"
 #include "Utility/ConfigController.h"
+#include "Utility/Timer.h"
 
 SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameState_(std::make_unique<GameState>()),
                              player_(std::make_unique<PhysicalPlayer>(0, engineBase_->getGraphicsLibrary().get()))
@@ -24,7 +25,7 @@ SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameSt
     this->update(deltaTime);
   });
 
-  player_ = std::make_unique<PhysicalPlayer>(0, engineBase_->getGraphicsLibrary().get());
+  player_ = std::make_unique<PhysicalPlayer>(1, engineBase_->getGraphicsLibrary().get());
 
   LevelCreator::addPlayer(engineBase_.get(), gameState_.get());
   LevelCreator::addPlayer(engineBase_.get(), gameState_.get());
@@ -32,7 +33,7 @@ SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameSt
 
   engineBase_->getGraphicsLibrary()->setTargetFPS(300);
   startPoint_ = std::chrono::high_resolution_clock::now();
-  MultiplayerUtil::connect(gameState_->characters_[1].get());
+  MultiplayerUtil::connect(gameState_.get());
   engineBase_->launch();
 }
 
@@ -40,7 +41,7 @@ void SimpFighter::update(const double deltaTime)
 {
   auto actions = player_->update(gameState_.get());
   gameState_->characters_[player_->getID()]->handleAction(deltaTime, actions, gameState_.get(), engineBase_.get());
-  MultiplayerUtil::send(actions);
+  MultiplayerUtil::send(gameState_.get());
 
   for (const auto& projectile : gameState_->projectiles_)
   {

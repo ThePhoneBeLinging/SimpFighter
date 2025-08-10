@@ -21,6 +21,7 @@ public:
   std::vector<std::shared_ptr<Character>> characters_;
   std::vector<std::shared_ptr<Wall>> walls_;
   std::vector<std::shared_ptr<Projectile>> projectiles_;
+  int playerID_ = 1;
 };
 
 

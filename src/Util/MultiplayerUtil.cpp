@@ -9,7 +9,7 @@
 #include <thread>
 #include <unistd.h>
 
-void MultiplayerUtil::connect(Character* onlineCharacter)
+void MultiplayerUtil::connect(GameState* gameState)
 {
   socket_ = socket(AF_INET, SOCK_DGRAM, 0);
   if (socket_ < 0)
@@ -31,21 +31,27 @@ void MultiplayerUtil::connect(Character* onlineCharacter)
   // Server address
   serverAddr.sin_family = AF_INET;
   serverAddr.sin_port = htons(19999);
-  inet_pton(AF_INET, "127.0.0.1", &serverAddr.sin_addr);
+  inet_pton(AF_INET, "158.179.205.63", &serverAddr.sin_addr);
 
   // Start receiving in a separate thread
-  std::thread receiver(receive, onlineCharacter);
+  std::thread receiver(receive, gameState);
   receiver.detach();
 }
 
-void MultiplayerUtil::send(const std::set<Action>& actions)
+void MultiplayerUtil::send(GameState* gameState)
 {
-  std::string message = ActionsHelper::toString(actions);
+  auto jsonObject = nlohmann::json::object();
+  jsonObject["playerID"] = gameState->playerID_;
+  jsonObject["playerX"] = static_cast<int>(gameState->characters_[gameState->playerID_]->drawAble_->getX());
+  jsonObject["playerY"] = static_cast<int>(gameState->characters_[gameState->playerID_]->drawAble_->getY());
+
+  std::string message = jsonObject.dump();
+
   sendto(socket_, message.c_str(), message.size(), 0,
          (struct sockaddr*)&serverAddr, sizeof(serverAddr));
 }
 
-std::set<Action> MultiplayerUtil::receive(Character* onlineCharacter)
+std::set<Action> MultiplayerUtil::receive(GameState* gameState)
 {
   char buffer[1024];
   sockaddr_in fromAddr{};
@@ -62,11 +68,12 @@ std::set<Action> MultiplayerUtil::receive(Character* onlineCharacter)
       std::string bufferString = std::string(buffer);
       if (bufferString.size() < 150)
       {
-        const std::chrono::high_resolution_clock::time_point timerEnd = std::chrono::high_resolution_clock::now();
-        const auto totalDuration = std::chrono::duration_cast<std::chrono::microseconds>(timerEnd - lastReceived);
-        auto action = ActionsHelper::actionsFromString(buffer);
-        onlineCharacter->handleAction(static_cast<double>(totalDuration.count() / 1000000.0), action, nullptr, nullptr);
-        lastReceived = std::chrono::high_resolution_clock::now();
+        auto jsonObject = nlohmann::json::parse(bufferString);
+        int playerID = jsonObject["playerID"].get<int>();
+        int playerX = jsonObject["playerX"].get<int>();
+        int playerY = jsonObject["playerY"].get<int>();
+        gameState->characters_[playerID]->drawAble_->setX(playerX);
+        gameState->characters_[playerID]->drawAble_->setY(playerY);
       }
     }
   }
