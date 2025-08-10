@@ -10,9 +10,11 @@
 #include "TextureLocations.h"
 #include "Players/SimpAI.hpp"
 #include "Util/CollisionController.hpp"
+#include "Util/MultiplayerUtil.hpp"
 #include "Utility/ConfigController.h"
 
-SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameState_(std::make_unique<GameState>())
+SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameState_(std::make_unique<GameState>()),
+                             player_(std::make_unique<PhysicalPlayer>(0, engineBase_->getGraphicsLibrary().get()))
 {
   ConfigController::loadConfig("../config.json");
 
@@ -22,26 +24,23 @@ SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameSt
     this->update(deltaTime);
   });
 
-  playerVector_.push_back(std::make_unique<PhysicalPlayer>(0, engineBase_->getGraphicsLibrary().get()));
-  LevelCreator::addPlayer(engineBase_.get(), gameState_.get());
+  player_ = std::make_unique<PhysicalPlayer>(0, engineBase_->getGraphicsLibrary().get());
 
-  playerVector_.push_back(std::make_unique<SimpAI>(1));
   LevelCreator::addPlayer(engineBase_.get(), gameState_.get());
-
+  LevelCreator::addPlayer(engineBase_.get(), gameState_.get());
   LevelCreator::createLevel(engineBase_.get(), gameState_.get());
 
   engineBase_->getGraphicsLibrary()->setTargetFPS(300);
   startPoint_ = std::chrono::high_resolution_clock::now();
+  MultiplayerUtil::connect(gameState_->characters_[1].get());
   engineBase_->launch();
 }
 
 void SimpFighter::update(const double deltaTime)
 {
-  for (const auto& player : playerVector_)
-  {
-    auto actions = player->update(gameState_.get());
-    gameState_->characters_[player->getID()]->handleAction(deltaTime, actions, gameState_.get(), engineBase_.get());
-  }
+  auto actions = player_->update(gameState_.get());
+  gameState_->characters_[player_->getID()]->handleAction(deltaTime, actions, gameState_.get(), engineBase_.get());
+  MultiplayerUtil::send(actions);
 
   for (const auto& projectile : gameState_->projectiles_)
   {

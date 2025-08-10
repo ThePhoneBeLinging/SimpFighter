@@ -22,8 +22,10 @@ add_library(LibSimpFighter
         Entities/Wall.cpp
         Players/SimpAI.cpp
         Players/SimpAI.hpp
+        Util/MultiplayerUtil.cpp
+        Util/MultiplayerUtil.hpp
 )
 
 target_link_libraries(LibSimpFighter PUBLIC
-        EngineBase Utility)
+        EngineBase Utility nlohmann_json)
 target_include_directories(LibSimpFighter PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
