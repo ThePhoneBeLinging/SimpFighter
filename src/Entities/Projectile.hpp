@@ -14,10 +14,15 @@ class Projectile : public Entity
 public:
   Projectile(EngineBase* engineBase, const std::shared_ptr<Vector>& movementVector,
              const std::shared_ptr<Vector>& startPos);
+  Projectile();
+  int id = 0;
+  static inline std::atomic_int nextID_ = 0;
   void update(double deltaTime);
   std::shared_ptr<Vector> movementVector_;
   static constexpr int movementSpeed_ = 500;
   static constexpr int damage_ = 10;
+  bool createdByThisClient = true;
+  bool addedToEngine = false;
 };
 
 

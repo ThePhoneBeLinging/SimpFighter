@@ -61,6 +61,11 @@ void SimpFighter::update(const double deltaTime)
   for (const auto& projectile : gameState_->projectiles_)
   {
     projectile->update(deltaTime);
+    if (not projectile->addedToEngine)
+    {
+      projectile->addedToEngine = true;
+      engineBase_->registerDrawAble(projectile->drawAble_);
+    }
   }
 
   CollisionController::handleCollisions(gameState_.get());

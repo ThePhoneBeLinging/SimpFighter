@@ -45,6 +45,22 @@ void MultiplayerUtil::send(GameState* gameState)
   jsonObject["playerX"] = static_cast<int>(gameState->characters_[gameState->playerID_]->drawAble_->getX());
   jsonObject["playerY"] = static_cast<int>(gameState->characters_[gameState->playerID_]->drawAble_->getY());
 
+  nlohmann::json projectileArray = nlohmann::json::array();
+  for (const auto& projectile : gameState->projectiles_)
+  {
+    if (projectile->createdByThisClient)
+    {
+      nlohmann::json projJson;
+      projJson["x"] = projectile->drawAble_->getX();
+      projJson["y"] = projectile->drawAble_->getY();
+      projJson["vx"] = projectile->movementVector_->x_;
+      projJson["vy"] = projectile->movementVector_->y_;
+      projJson["id"] = projectile->id;
+      projectileArray.push_back(projJson);
+    }
+  }
+  jsonObject["Projectiles"] = projectileArray;
+
   std::string message = jsonObject.dump();
   if (lastSentString == message) { return; }
   lastSentString = message;
@@ -76,7 +92,7 @@ std::set<Action> MultiplayerUtil::receive(GameState* gameState)
     if (bytes > 0)
     {
       std::string bufferString = std::string(buffer);
-      auto jsonObject = nlohmann::json::parse(bufferString);
+      jsonObject = nlohmann::json::parse(bufferString);
       int playerID = jsonObject["playerID"].get<int>();
       if (jsonObject.contains("init") && not gameState->bothConnected)
       {
@@ -101,6 +117,38 @@ std::set<Action> MultiplayerUtil::receive(GameState* gameState)
         int playerY = jsonObject["playerY"].get<int>();
         gameState->characters_[playerID]->drawAble_->setX(playerX);
         gameState->characters_[playerID]->drawAble_->setY(playerY);
+      }
+
+      if (jsonObject.contains("Projectiles") && jsonObject["Projectiles"].is_array())
+      {
+        for (const auto& projJson : jsonObject["Projectiles"])
+        {
+          bool existedAlready = false;
+          for (const auto& projectile : gameState->projectiles_)
+          {
+            if (projectile->createdByThisClient) { continue; }
+            if (projectile->id == projJson["id"].get<int>())
+            {
+              projectile->drawAble_->setX(projJson["x"].get<double>());
+              projectile->drawAble_->setY(projJson["y"].get<double>());
+              projectile->movementVector_->x_ = projJson["vx"].get<double>();
+              projectile->movementVector_->y_ = projJson["vy"].get<double>();
+              existedAlready = true;
+              break;
+            }
+          }
+          if (not existedAlready)
+          {
+            auto projectile = std::make_shared<Projectile>();
+            projectile->drawAble_->setX(projJson["x"].get<double>());
+            projectile->drawAble_->setY(projJson["y"].get<double>());
+            projectile->movementVector_->x_ = projJson["vx"].get<double>();
+            projectile->movementVector_->y_ = projJson["vy"].get<double>();
+            projectile->createdByThisClient = false;
+            projectile->id = projJson["id"].get<int>();
+            gameState->projectiles_.push_back(projectile);
+          }
+        }
       }
     }
   }
