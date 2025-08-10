@@ -37,7 +37,6 @@ SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameSt
 
 
   engineBase_->getGraphicsLibrary()->setTargetFPS(300);
-  MultiplayerUtil::connect(gameState_.get());
   engineBase_->launch();
 }
 
