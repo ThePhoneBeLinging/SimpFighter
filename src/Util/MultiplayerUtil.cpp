@@ -50,6 +50,7 @@ std::set<Action> MultiplayerUtil::receive(Character* onlineCharacter)
   char buffer[1024];
   sockaddr_in fromAddr{};
   socklen_t fromLen = sizeof(fromAddr);
+  std::chrono::time_point<std::chrono::high_resolution_clock> lastReceived = std::chrono::high_resolution_clock::now();
 
   while (true)
   {
@@ -61,8 +62,11 @@ std::set<Action> MultiplayerUtil::receive(Character* onlineCharacter)
       std::string bufferString = std::string(buffer);
       if (bufferString.size() < 150)
       {
+        const std::chrono::high_resolution_clock::time_point timerEnd = std::chrono::high_resolution_clock::now();
+        const auto totalDuration = std::chrono::duration_cast<std::chrono::microseconds>(timerEnd - lastReceived);
         auto action = ActionsHelper::actionsFromString(buffer);
-        onlineCharacter->handleAction(0.01, action, nullptr, nullptr);
+        onlineCharacter->handleAction(static_cast<double>(totalDuration.count() / 1000000.0), action, nullptr, nullptr);
+        lastReceived = std::chrono::high_resolution_clock::now();
       }
     }
   }
