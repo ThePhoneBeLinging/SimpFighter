@@ -25,6 +25,7 @@ private:
   std::unique_ptr<EngineBase> engineBase_;
   std::unique_ptr<GameState> gameState_;
   std::unique_ptr<IPlayer> player_;
+  std::shared_ptr<DrawAble> waitingDrawable_;
 };
 
 

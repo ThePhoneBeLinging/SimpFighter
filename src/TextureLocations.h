@@ -11,6 +11,7 @@ namespace TextureLocation
   static inline std::string player = "../Resources/player.png";
   static inline std::string wall = "../Resources/conc.png";
   static inline std::string bullet = "../Resources/bullet.png";
+  static inline std::string waiting = "../Resources/waiting.png";
 }
 
 #endif //TEXTURELOCATIONS_H

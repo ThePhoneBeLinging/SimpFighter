@@ -27,6 +27,11 @@ SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameSt
   LevelCreator::addPlayer(engineBase_.get(), gameState_.get());
   LevelCreator::addPlayer(engineBase_.get(), gameState_.get());
   LevelCreator::createLevel(engineBase_.get(), gameState_.get());
+  waitingDrawable_ = std::make_shared<DrawAble>();
+  waitingDrawable_->setTextureLocation(&TextureLocation::waiting);
+  waitingDrawable_->setSize(500, 500);
+  waitingDrawable_->setPosition(350, 800 - 750);
+  engineBase_->registerDrawAble(waitingDrawable_);
 
   MultiplayerUtil::connect(gameState_.get());
 
@@ -47,6 +52,8 @@ void SimpFighter::update(const double deltaTime)
   {
     startPoint_ = std::chrono::high_resolution_clock::now();
     player_ = std::make_unique<PhysicalPlayer>(gameState_->playerID_, engineBase_->getGraphicsLibrary().get());
+    waitingDrawable_ = nullptr;
+    gameState_->firstUpdate = false;
   }
   auto actions = player_->update(gameState_.get());
   gameState_->characters_[player_->getID()]->handleAction(deltaTime, actions, gameState_.get(), engineBase_.get());
