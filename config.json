@@ -1,5 +1,6 @@
 {
   "AmountOfPlayers": 2,
   "ShootingDelayMS": 1000,
-  "MaxGameTime": 30
+  "MaxGameTime": 60,
+  "Multiplayer": true
 }

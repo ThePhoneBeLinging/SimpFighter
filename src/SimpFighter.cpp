@@ -33,7 +33,15 @@ SimpFighter::SimpFighter() : engineBase_(std::make_unique<EngineBase>()), gameSt
   waitingDrawable_->setPosition(350, 800 - 750);
   engineBase_->registerDrawAble(waitingDrawable_);
 
-  MultiplayerUtil::connect(gameState_.get());
+  if (ConfigController::getConfigBool("Multiplayer"))
+  {
+    MultiplayerUtil::connect(gameState_.get());
+  }
+  else
+  {
+    gameState_->bothConnected = true;
+    player2_ = std::make_unique<SimpAI>(1);
+  }
 
 
   engineBase_->getGraphicsLibrary()->setTargetFPS(300);
@@ -56,7 +64,16 @@ void SimpFighter::update(const double deltaTime)
   }
   auto actions = player_->update(gameState_.get());
   gameState_->characters_[player_->getID()]->handleAction(deltaTime, actions, gameState_.get(), engineBase_.get());
-  MultiplayerUtil::send(gameState_.get());
+
+  if (ConfigController::getConfigBool("Multiplayer"))
+  {
+    MultiplayerUtil::send(gameState_.get());
+  }
+  else
+  {
+    actions = player2_->update(gameState_.get());
+    gameState_->characters_[player2_->getID()]->handleAction(deltaTime, actions, gameState_.get(), engineBase_.get());
+  }
 
   for (const auto& projectile : gameState_->projectiles_)
   {
@@ -72,13 +89,19 @@ void SimpFighter::update(const double deltaTime)
 
   if (gameState_->characters_[0]->health_ <= 0)
   {
-    MultiplayerUtil::send(gameState_.get());
+    if (ConfigController::getConfigBool("Multiplayer"))
+    {
+      MultiplayerUtil::send(gameState_.get());
+    }
     result = -1;
     engineBase_->getGraphicsLibrary()->closeWindow();
   }
   else if (gameState_->characters_[1]->health_ <= 0)
   {
-    MultiplayerUtil::send(gameState_.get());
+    if (ConfigController::getConfigBool("Multiplayer"))
+    {
+      MultiplayerUtil::send(gameState_.get());
+    }
     result = 1;
     engineBase_->getGraphicsLibrary()->closeWindow();
   }
