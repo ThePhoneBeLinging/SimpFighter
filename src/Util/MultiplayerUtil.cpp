@@ -44,6 +44,7 @@ void MultiplayerUtil::send(GameState* gameState)
   jsonObject["playerID"] = gameState->playerID_;
   jsonObject["playerX"] = static_cast<int>(gameState->characters_[gameState->playerID_]->drawAble_->getX());
   jsonObject["playerY"] = static_cast<int>(gameState->characters_[gameState->playerID_]->drawAble_->getY());
+  jsonObject["otherPlayerHealth"] = gameState->characters_[gameState->playerID_ == 1 ? 0 : 1]->health_;
 
   nlohmann::json projectileArray = nlohmann::json::array();
   for (const auto& projectile : gameState->projectiles_)
@@ -82,7 +83,6 @@ std::set<Action> MultiplayerUtil::receive(GameState* gameState)
   char buffer[1024];
   sockaddr_in fromAddr{};
   socklen_t fromLen = sizeof(fromAddr);
-  std::chrono::time_point<std::chrono::high_resolution_clock> lastReceived = std::chrono::high_resolution_clock::now();
 
   while (true)
   {
@@ -117,6 +117,12 @@ std::set<Action> MultiplayerUtil::receive(GameState* gameState)
         int playerY = jsonObject["playerY"].get<int>();
         gameState->characters_[playerID]->drawAble_->setX(playerX);
         gameState->characters_[playerID]->drawAble_->setY(playerY);
+      }
+
+      if (jsonObject.contains("otherPlayerHealth"))
+      {
+        int otherPlayerHealth = jsonObject["otherPlayerHealth"].get<int>();
+        gameState->characters_[gameState->playerID_]->health_ = otherPlayerHealth;
       }
 
       if (jsonObject.contains("Projectiles") && jsonObject["Projectiles"].is_array())

@@ -72,11 +72,13 @@ void SimpFighter::update(const double deltaTime)
 
   if (gameState_->characters_[0]->health_ <= 0)
   {
+    MultiplayerUtil::send(gameState_.get());
     result = -1;
     engineBase_->getGraphicsLibrary()->closeWindow();
   }
   else if (gameState_->characters_[1]->health_ <= 0)
   {
+    MultiplayerUtil::send(gameState_.get());
     result = 1;
     engineBase_->getGraphicsLibrary()->closeWindow();
   }

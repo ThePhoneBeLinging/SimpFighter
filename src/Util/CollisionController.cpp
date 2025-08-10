@@ -36,6 +36,10 @@ void CollisionController::handleCollisions(GameState* gameState)
   std::vector<std::shared_ptr<Projectile>> projectiles;
   for (const auto& projectile : gameState->projectiles_)
   {
+    if (not projectile->createdByThisClient)
+    {
+      continue;
+    }
     bool projectileSurvived = true;
     for (const auto& player : gameState->characters_)
     {
