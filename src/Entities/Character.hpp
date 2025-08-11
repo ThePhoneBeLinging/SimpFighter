@@ -21,6 +21,8 @@ public:
   Vector lastMovementVector_;
   static constexpr int movementSpeed_ = 250;
 
+  bool canShoot();
+
 private:
   std::unique_ptr<Vector> lastVelocityVector_;
   std::chrono::time_point<std::chrono::high_resolution_clock> lastShootingTime_;

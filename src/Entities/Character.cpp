@@ -10,6 +10,13 @@
 #include "Utility/ConfigController.h"
 
 
+bool Character::canShoot() {
+    const std::chrono::high_resolution_clock::time_point timerEnd = std::chrono::high_resolution_clock::now();
+    const auto totalDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timerEnd - lastShootingTime_);
+
+    return totalDuration.count() > ConfigController::getConfigInt("ShootingDelayMS");
+}
+
 Character::Character() : health_(50), lastVelocityVector_(std::make_unique<Vector>())
 {
   lastVelocityVector_->x_ = 1;
@@ -68,14 +75,8 @@ void Character::handleAction(const double deltaTime, const std::set<Action>& act
     }
   }
 
-  if (actions.contains(Action::SHOOT))
+  if (actions.contains(Action::SHOOT) && canShoot())
   {
-    const std::chrono::high_resolution_clock::time_point timerEnd = std::chrono::high_resolution_clock::now();
-    const auto totalDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timerEnd - lastShootingTime_);
-    if (totalDuration.count() < ConfigController::getConfigInt("ShootingDelayMS"))
-    {
-      return;
-    }
     auto currentPos = std::make_shared<Vector>();
     currentPos->x_ = drawAble_->getX() + (drawAble_->getWidth() / 2);
     currentPos->y_ = drawAble_->getY() + (drawAble_->getHeight() / 2);
